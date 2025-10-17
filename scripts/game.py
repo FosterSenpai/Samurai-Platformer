@@ -1,6 +1,12 @@
+# game.py
+# Game class that brings all modules together and runs the main gameplay loop.
+# Author: Foster Rae
+# Created: 18-10-2025
+# Last Modified: 18-10-2025
 import os, time, pygame
 from scripts.config import Config
 from scripts.components.player_controller import PlayerController
+
 class Game():
     def __init__(self):
         pygame.init()

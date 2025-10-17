@@ -1,5 +1,8 @@
 # player.py
 # The class for the player entity, handles player stats and rendering.
+# Author: Foster Rae
+# Created: 18-10-2025
+# Last Modified: 18-10-2025
 import pygame
 
 class Player(pygame.sprite.Sprite):
