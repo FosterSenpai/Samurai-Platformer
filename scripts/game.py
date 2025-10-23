@@ -35,7 +35,7 @@ class Game():
             self.controller.handle_input(event)
     
     def update(self):
-        self.dt = self.clock.tick(self.fps)
+        self.dt = self.clock.tick(self.fps) / 1000.0
         self.screen_state_stack[-1].update(self.dt, self.controller.actions)
     
     def render(self):
