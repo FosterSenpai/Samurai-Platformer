@@ -30,7 +30,7 @@ class AssetManager:
         """load UI, player and common assets."""
         # Fonts
         AssetManager.core_fonts['default'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 32)
-        AssetManager.core_fonts['Title'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 65)
+        AssetManager.core_fonts['title'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 65)
         AssetManager.core_fonts['small'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 20)
         # Load UI
         ui_sheet = Spritesheet(os.path.join(AssetManager.ui_sprites_dir, 'humble_UI_sheet.png'))
