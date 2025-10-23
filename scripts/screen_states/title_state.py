@@ -27,11 +27,15 @@ class TitleState(State):
     
     def render(self, surface) -> None:
         # Draw background
+        # Drawing each image a second time offset to remove scoll seams
         surface.blit(self.bg0, (self.bg0_x, 0))
+        surface.blit(self.bg0, (self.bg0_x + self.bg0.get_width(), 0))
         surface.blit(self.bg1, (self.bg1_x, 0))
+        surface.blit(self.bg1, (self.bg1_x + self.bg1.get_width(), 0))
         surface.blit(self.bg2, (self.bg2_x, 0))
+        surface.blit(self.bg2, (self.bg2_x + self.bg2.get_width(), 0))
         # Temporary text
-        Text.draw_text(surface, "SAMURAI PLATFORMER", (0, 0, 0), 
+        Text.draw_text(surface, "LOFI SAMURAI", (0, 0, 0), 
                       surface.get_width() // 2, 30)
 
     def scroll_bg(self, delta_time):
