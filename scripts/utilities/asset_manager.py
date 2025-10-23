@@ -1,6 +1,7 @@
 import pygame
 import os
 from scripts.config import Config
+from scripts.utilities.spritesheet import Spritesheet
 
 class AssetManager:
     # Core assets to always be loaded
@@ -14,11 +15,12 @@ class AssetManager:
     level_fonts = {}
     
     # Pointers to directories
-    data_dir = os.path.join("data")
-    assets_dir = os.path.join(data_dir, "assets")
+    data_dir = os.path.join('data')
+    assets_dir = os.path.join(data_dir, 'assets')
     fonts_dir = os.path.join(assets_dir, 'fonts')
     sounds_dir = os.path.join(assets_dir, 'sounds')
-    sprites_dir = os.path.join(assets_dir, "sprites")
+    sprites_dir = os.path.join(assets_dir, 'sprites')
+    ui_sprites_dir = os.path.join(sprites_dir, 'ui')
     environment_dir = os.path.join(sprites_dir, 'environment')
     biome_dir = os.path.join(environment_dir, 'biomes')
     stringstar_fields_dir = os.path.join(biome_dir, 'stringstar_fields')
@@ -30,6 +32,11 @@ class AssetManager:
         AssetManager.core_fonts['default'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 32)
         AssetManager.core_fonts['Title'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 65)
         AssetManager.core_fonts['small'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 20)
+        # Load UI
+        ui_sheet = Spritesheet(os.path.join(AssetManager.ui_sprites_dir, 'humble_UI_sheet.png'))
+        ui_sprites = ui_sheet.parse_spritesheet()
+        for name, sprite in ui_sprites.items():
+            AssetManager.core_sprites[f'ui_{name}'] = sprite
         # Menu Backgrounds (using stringstar fields bg for now)
         AssetManager.core_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '0.png'))
         AssetManager.core_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '1.png'))
