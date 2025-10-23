@@ -17,6 +17,7 @@ class AssetManager:
     data_dir = os.path.join("data")
     assets_dir = os.path.join(data_dir, "assets")
     fonts_dir = os.path.join(assets_dir, 'fonts')
+    sounds_dir = os.path.join(assets_dir, 'sounds')
     sprites_dir = os.path.join(assets_dir, "sprites")
     environment_dir = os.path.join(sprites_dir, 'environment')
     biome_dir = os.path.join(environment_dir, 'biomes')
@@ -33,12 +34,16 @@ class AssetManager:
         AssetManager.core_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '0.png'))
         AssetManager.core_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '1.png'))
         AssetManager.core_sprites['bg2'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '2.png'))
-        
         # Rescaling sprites
         for sprite_name, sprite_surface in AssetManager.core_sprites.items():
             # Rescaling bg to game size
             if 'bg' in sprite_name:
-                AssetManager.core_sprites[sprite_name] = pygame.transform.scale(sprite_surface, (Config.GAME_W, Config.GAME_H))
+                AssetManager.core_sprites[sprite_name] = pygame.transform.scale(sprite_surface, (Config.GAME_W * 2, Config.GAME_H))
+        # Audio
+        pygame.mixer.init()
+        # Storing paths for music, music is loaded per screen/state
+        AssetManager.core_sounds['evening mood'] = os.path.join(AssetManager.sounds_dir, 'evening mood.ogg')
+    
     @staticmethod
     def load_level_assets(level_name: str) -> None:
         """Load level specific assets.
