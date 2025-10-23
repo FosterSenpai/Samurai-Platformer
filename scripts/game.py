@@ -11,7 +11,6 @@ from scripts.screen_states.title_state import TitleState
 class Game():
     def __init__(self):
         pygame.init()
-        AssetManager.load_core_assets()
         # Screen
         self.GAME_W, self.GAME_H = Config.GAME_W, Config.GAME_H
         self.SCREEN_W, self.SCREEN_H = Config.SCREEN_W, Config.SCREEN_H
@@ -19,6 +18,8 @@ class Game():
         self.screen = pygame.display.set_mode((self.SCREEN_W, self.SCREEN_H))
         self.fps = Config.FPS
         self.screen_state_stack = []
+        AssetManager.load_core_assets()
+        
         # Timing
         self.clock = pygame.time.Clock()
         self.dt = 0.0
