@@ -21,9 +21,9 @@ class AssetManager:
     sounds_dir = os.path.join(assets_dir, 'sounds')
     sprites_dir = os.path.join(assets_dir, 'sprites')
     ui_sprites_dir = os.path.join(sprites_dir, 'ui')
-    environment_dir = os.path.join(sprites_dir, 'environment')
-    biome_dir = os.path.join(environment_dir, 'biomes')
-    stringstar_fields_dir = os.path.join(biome_dir, 'stringstar_fields')
+    environment_sprites_dir = os.path.join(sprites_dir, 'environment')
+    biome_sprites_dir = os.path.join(environment_sprites_dir, 'biomes')
+    stringstar_fields_sprites_dir = os.path.join(biome_sprites_dir, 'stringstar_fields')
     
     @staticmethod
     def load_core_assets() -> None:
@@ -38,9 +38,9 @@ class AssetManager:
         for name, sprite in ui_sprites.items():
             AssetManager.core_sprites[f'ui_{name}'] = sprite
         # Menu Backgrounds (using stringstar fields bg for now)
-        AssetManager.core_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '0.png'))
-        AssetManager.core_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '1.png'))
-        AssetManager.core_sprites['bg2'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '2.png'))
+        AssetManager.core_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '0.png'))
+        AssetManager.core_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '1.png'))
+        AssetManager.core_sprites['bg2'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '2.png'))
         # Rescaling sprites
         for sprite_name, sprite_surface in AssetManager.core_sprites.items():
             # Rescaling bg to game size
@@ -59,9 +59,9 @@ class AssetManager:
         """
         match(level_name):
             case 'starstring_fields':
-                AssetManager.level_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '0.png'))
-                AssetManager.level_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '1.png'))
-                AssetManager.level_sprites['bg2'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '2.png'))
+                AssetManager.level_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '0.png'))
+                AssetManager.level_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '1.png'))
+                AssetManager.level_sprites['bg2'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '2.png'))
                 
     
     @staticmethod
