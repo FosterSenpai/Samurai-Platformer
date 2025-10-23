@@ -3,11 +3,10 @@
 # Author: Foster Rae
 # Created: 23-10-2025
 # Last Modified: 23-10-2025
-from game import Game
 import pygame
 
 class State():
-    def __init__(self, game: Game) -> None:
+    def __init__(self, game) -> None:
         self.game = game
         self.prev_state = None
         
