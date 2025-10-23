@@ -78,9 +78,13 @@ class TitleState(State):
         spacing = (self.ui_big_box.get_height() - total_button_height) // 5
         button_y = big_box_y + spacing
         surface.blit(self.ui_play_button, (button_x, button_y))
+        Text.draw_text(surface, "Play", (27, 34, 54), button_x + self.ui_button.get_width()//2, button_y + self.ui_button.get_height()//2 - 6)
         button_y += self.ui_button.get_height() + spacing
         surface.blit(self.ui_load_button, (button_x, button_y))
+        Text.draw_text(surface, "Load", (27, 34, 54), button_x + self.ui_button.get_width()//2, button_y + self.ui_button.get_height()//2 - 6)
         button_y += self.ui_button.get_height() + spacing
         surface.blit(self.ui_options_button, (button_x, button_y))
+        Text.draw_text(surface, "Options", (27, 34, 54), button_x + self.ui_button.get_width()//2, button_y + self.ui_button.get_height()//2 - 6)
         button_y += self.ui_button.get_height() + spacing
         surface.blit(self.ui_quit_button, (button_x, button_y))
+        Text.draw_text(surface, "Quit", (27, 34, 54), button_x + self.ui_button.get_width()//2, button_y + self.ui_button.get_height()//2 - 6)
