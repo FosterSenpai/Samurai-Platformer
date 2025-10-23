@@ -11,6 +11,9 @@ from scripts.utilities.asset_manager import AssetManager
 class TitleState(State):
     def __init__(self, game) -> None:
         super().__init__(game)
+        # UI elements
+        self.ui_1 = AssetManager.core_sprites['ui_sprite159'].copy()
+        # Background
         self.bg0 = AssetManager.core_sprites['bg0']
         self.bg1 = AssetManager.core_sprites['bg1']
         self.bg2 = AssetManager.core_sprites['bg2']
@@ -37,7 +40,10 @@ class TitleState(State):
         # Temporary text
         Text.draw_text(surface, "LOFI SAMURAI", (0, 0, 0), 
                       surface.get_width() // 2, 30)
-
+        
+        # Draw UI
+        surface.blit(self.ui_1, (surface.get_width()//2 - self.ui_1.get_width()//2, surface.get_height()//8))
+        
     def scroll_bg(self, delta_time):
         # Scroll speeds
         bg0_speed, bg1_speed, bg2_speed = 10,20,30
