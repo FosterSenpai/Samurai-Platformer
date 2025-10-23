@@ -4,7 +4,7 @@
 # Created: 18-10-2025
 # Modified: 18-10-2025
 import pygame
-from config import Config
+from scripts.utilities.asset_manager import AssetManager
 
 class Text:
     
@@ -19,7 +19,7 @@ class Text:
             x (int): The x coordinate of the center of the text.
             y (_type_): The y coordinate of the center of the text.
         """
-        text_surface = Config.FONT_DEFAULT.render(text, True, colour)
+        text_surface = AssetManager.core_fonts['default'].render(text, True, colour)
         text_rect = text_surface.get_rect()
         text_rect.center = (x,y)
         surface.blit(text_surface, text_rect)
