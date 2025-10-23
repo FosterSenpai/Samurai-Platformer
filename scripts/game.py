@@ -28,9 +28,6 @@ class Game():
         
         self.load_states()
         
-        # TEMPORARY, REMOVE
-        AssetManager.load_level_assets('stringstar_fields')
-        
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
