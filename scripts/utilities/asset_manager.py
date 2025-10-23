@@ -1,5 +1,6 @@
 import pygame
 import os
+from scripts.config import Config
 
 class AssetManager:
     # Core assets to always be loaded
@@ -18,16 +19,26 @@ class AssetManager:
     fonts_dir = os.path.join(assets_dir, 'fonts')
     sprites_dir = os.path.join(assets_dir, "sprites")
     environment_dir = os.path.join(sprites_dir, 'environment')
-    biome_dir = os.path.join(environment_dir, 'biome')
-    stringstar_fields_dir = os.path.join(environment_dir, 'stringstar_fields')
+    biome_dir = os.path.join(environment_dir, 'biomes')
+    stringstar_fields_dir = os.path.join(biome_dir, 'stringstar_fields')
     
     @staticmethod
     def load_core_assets() -> None:
         """load UI, player and common assets."""
+        # Fonts
         AssetManager.core_fonts['default'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 32)
         AssetManager.core_fonts['Title'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 65)
         AssetManager.core_fonts['small'] = pygame.font.Font(os.path.join(AssetManager.fonts_dir,'Virtupetpixies-7O3GV.ttf'), 20)
-
+        # Menu Backgrounds (using stringstar fields bg for now)
+        AssetManager.core_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '0.png'))
+        AssetManager.core_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '1.png'))
+        AssetManager.core_sprites['bg2'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_dir, 'background', '2.png'))
+        
+        # Rescaling sprites
+        for sprite_name, sprite_surface in AssetManager.core_sprites.items():
+            # Rescaling bg to game size
+            if 'bg' in sprite_name:
+                AssetManager.core_sprites[sprite_name] = pygame.transform.scale(sprite_surface, (Config.GAME_W, Config.GAME_H))
     @staticmethod
     def load_level_assets(level_name: str) -> None:
         """Load level specific assets.
