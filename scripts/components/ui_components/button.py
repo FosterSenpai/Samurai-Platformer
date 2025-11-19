@@ -1,6 +1,7 @@
-# UI Button Component class, will have two constructors: color and image-based
-# Lol, python doesnt allow for multiple constructors, using optional parameters + conditionals instead
-# Will handle hover and click states, will auto darkern on hover and depress on click, and play sound
+# button.py
+# UI Button component with hover and click states, takes either image or color in constructor.
+# Author: Foster Rae
+# Created: 20-11-2025
 import pygame
 from typing import Optional, Callable
 from scripts.utilities.asset_manager import AssetManager
@@ -40,11 +41,11 @@ class Button:
         # Text setup
         if display_text is not None:
             self.display_text: str = display_text
-            self.font = AssetManager.core_fonts['default']
-            self.text_surface_normal = self.font.render(self.display_text, True, (27, 34, 54))
-            self.text_surface_hover = self.font.render(self.display_text, True, (77, 84, 84))
-            self.text_surface_clicked = self.font.render(self.display_text, True, (177, 184, 204))
-            self.text_rect = self.text_surface_normal.get_rect(center=(self.x + self.w // 2, self.y + self.h // 2 - 4))
+            self.font: pygame.font.Font = AssetManager.core_fonts['default']
+            self.text_surface_normal: pygame.Surface = self.font.render(self.display_text, True, (27, 34, 54))
+            self.text_surface_hover: pygame.Surface = self.font.render(self.display_text, True, (77, 84, 84))
+            self.text_surface_clicked: pygame.Surface = self.font.render(self.display_text, True, (177, 184, 204))
+            self.text_rect: pygame.Rect = self.text_surface_normal.get_rect(center=(self.x + self.w // 2, self.y + self.h // 2 - 4))
         
     def draw(self, surface: pygame.Surface) -> None:
         # Drawing the button and darkening based on state
