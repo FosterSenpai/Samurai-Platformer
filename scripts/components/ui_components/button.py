@@ -1,6 +1,8 @@
 # UI Button Component class, will have two constructors: color and image-based
 # Lol, python doesnt allow for multiple constructors, using optional parameters + conditionals instead
 # Will handle hover and click states, will auto darkern on hover and depress on click
+
+# TODO: Add sound effects on click
 import pygame
 from typing import Optional, Callable
 
