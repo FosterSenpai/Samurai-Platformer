@@ -5,12 +5,14 @@
 # TODO: Add sound effects on click
 import pygame
 from typing import Optional, Callable
+from scripts.utilities.asset_manager import AssetManager
 
 class Button:
-    def __init__(self, pos: tuple[int, int], callback: Optional[Callable] = None, image: Optional[pygame.Surface] = None, color: Optional[tuple[int, int, int]] = None, size: Optional[tuple[int, int]] = None) -> None:
+    def __init__(self, pos: tuple[int, int], display_text: Optional[str], callback: Optional[Callable] = None, image: Optional[pygame.Surface] = None, color: Optional[tuple[int, int, int]] = None, size: Optional[tuple[int, int]] = None) -> None:
         """Initializes a UI Button, either image-based or color-based. (Color buttons require size)
         Args:
             pos (tuple[int, int]): The (x, y) position of the button.
+            display_text (str): The text to display on the button.
             callback (Optional[Callable], optional): Function to call when clicked. Defaults to None.
             image (Optional[pygame.Surface], optional): The image for the button. Defaults to None.
             color (Optional[tuple[int, int, int]], optional): The color for the button. Defaults to None.
@@ -18,6 +20,8 @@ class Button:
         """
         if color is None and image is None:
             raise ValueError("Either color or image must be provided.")
+        
+        # Position and size
         self.x: int = pos[0]
         self.y: int = pos[1]
         if size is not None:
@@ -26,11 +30,22 @@ class Button:
         else:
             self.w: int = image.get_width() if image else 0
             self.h: int = image.get_height() if image else 0
+        
+        # Content
         self.color: Optional[tuple[int, int, int]] = color
         self.image: Optional[pygame.Surface] = image
         self.is_clicked: bool = False
         self.is_hovered: bool = False
         self.callback: Optional[Callable] = callback
+        
+        # Text setup
+        if display_text is not None:
+            self.display_text: str = display_text
+            self.font = AssetManager.core_fonts['default']
+            self.text_surface_normal = self.font.render(self.display_text, True, (27, 34, 54))
+            self.text_surface_hover = self.font.render(self.display_text, True, (77, 84, 84))
+            self.text_surface_clicked = self.font.render(self.display_text, True, (177, 184, 204))
+            self.text_rect = self.text_surface_normal.get_rect(center=(self.x + self.w // 2, self.y + self.h // 2 - 4))
         
     def draw(self, surface: pygame.Surface) -> None:
         # Drawing the button and darkening based on state
@@ -48,6 +63,15 @@ class Button:
             elif self.is_hovered:
                 display_color = self.darken_color(self.color, amount=30)
             pygame.draw.rect(surface, display_color, (self.x, self.y, self.w, self.h))
+            
+        # Draw text
+        if self.display_text:
+            if self.is_clicked:
+                surface.blit(self.text_surface_clicked, self.text_rect)
+            elif self.is_hovered:
+                surface.blit(self.text_surface_hover, self.text_rect)
+            else:
+                surface.blit(self.text_surface_normal, self.text_rect)
     
     def update(self, mouse_pos: tuple[int, int], mouse_pressed: bool) -> None:
         self.is_hovered = self.check_hovered(mouse_pos)
