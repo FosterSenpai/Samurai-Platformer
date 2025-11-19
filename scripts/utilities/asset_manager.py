@@ -48,6 +48,9 @@ class AssetManager:
                 AssetManager.core_sprites[sprite_name] = pygame.transform.scale(sprite_surface, (Config.GAME_W * 2, Config.GAME_H))
         # Audio
         pygame.mixer.init()
+        # Sounds
+        AssetManager.core_sounds['button_click'] = pygame.mixer.Sound(os.path.join(AssetManager.sounds_dir, 'ui', 'button_click.ogg'))
+        AssetManager.core_sounds['notification'] = pygame.mixer.Sound(os.path.join(AssetManager.sounds_dir, 'ui', 'notification.ogg'))
         # Storing paths for music, music is loaded per screen/state
         AssetManager.core_sounds['evening mood'] = os.path.join(AssetManager.sounds_dir, 'music/evening mood.ogg')
     

@@ -1,8 +1,6 @@
 # UI Button Component class, will have two constructors: color and image-based
 # Lol, python doesnt allow for multiple constructors, using optional parameters + conditionals instead
-# Will handle hover and click states, will auto darkern on hover and depress on click
-
-# TODO: Add sound effects on click
+# Will handle hover and click states, will auto darkern on hover and depress on click, and play sound
 import pygame
 from typing import Optional, Callable
 from scripts.utilities.asset_manager import AssetManager
@@ -37,6 +35,7 @@ class Button:
         self.is_clicked: bool = False
         self.is_hovered: bool = False
         self.callback: Optional[Callable] = callback
+        self.click_sound: pygame.mixer.Sound = AssetManager.core_sounds['button_click']
         
         # Text setup
         if display_text is not None:
@@ -79,6 +78,7 @@ class Button:
         # Handle click
         was_clicked = self.is_clicked # Store previous state (for stopping click spam)
         if self.is_hovered and mouse_pressed and not was_clicked:
+            self.click_sound.play()
             self.is_clicked = True
             if self.callback:
                 self.callback()
