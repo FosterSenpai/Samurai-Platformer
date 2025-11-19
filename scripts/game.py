@@ -55,6 +55,11 @@ class Game():
         # Load title screen first
         self.title_screen = TitleState(self)
         self.screen_state_stack.append(self.title_screen)
-                
+    
+    def get_mouse_position(self) -> tuple[int, int]:
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        scale_x = self.GAME_W / self.SCREEN_W
+        scale_y = self.GAME_H / self.SCREEN_H
+        return (int(mouse_x * scale_x), int(mouse_y * scale_y))
             
                 
