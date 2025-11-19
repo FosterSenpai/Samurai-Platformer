@@ -28,10 +28,10 @@ class TitleState(State):
         spacing = (self.ui_big_box.get_height() - total_button_height) // 5
         button_y = self.big_box_y + spacing
         # Buttons
-        self.button_play = Button(pos=(button_x, button_y),callback=self.on_play_clicked, image=self.ui_button_sprite)
-        self.button_load = Button(pos=(button_x, button_y + (menu_button_height + spacing)*1), callback=self.on_load_clicked, image=self.ui_button_sprite)
-        self.button_options = Button(pos=(button_x, button_y + (menu_button_height + spacing)*2), callback=self.on_options_clicked, image=self.ui_button_sprite)
-        self.button_quit = Button(pos=(button_x, button_y + (menu_button_height + spacing)*3), callback=self.on_quit_clicked, image=self.ui_button_sprite)
+        self.button_play = Button(pos=(button_x, button_y), display_text="Play", callback=self.on_play_clicked,image=self.ui_button_sprite)
+        self.button_load = Button(pos=(button_x, button_y + (menu_button_height + spacing)*1), display_text="Load", callback=self.on_load_clicked, image=self.ui_button_sprite)
+        self.button_options = Button(pos=(button_x, button_y + (menu_button_height + spacing)*2), display_text="Options", callback=self.on_options_clicked, image=self.ui_button_sprite)
+        self.button_quit = Button(pos=(button_x, button_y + (menu_button_height + spacing)*3), display_text="Quit", callback=self.on_quit_clicked, image=self.ui_button_sprite)
         self.buttons = [self.button_play, self.button_load, self.button_options, self.button_quit]
         # Background
         self.bg0 = AssetManager.core_sprites['bg0']
