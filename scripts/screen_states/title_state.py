@@ -7,21 +7,32 @@ import pygame
 from scripts.screen_states.screen_state import State
 from scripts.utilities.text import Text
 from scripts.utilities.asset_manager import AssetManager
+from scripts.components.ui_components.button import Button
 
 class TitleState(State):
     def __init__(self, game) -> None:
         super().__init__(game)
         canvas_w, canvas_h = self.game.GAME_W, self.game.GAME_H
         # UI elements
+        # Container config
         big_box_width, big_box_height = int(canvas_w * 0.35), int(canvas_h * 0.8)
         self.ui_big_box = pygame.transform.scale(AssetManager.core_sprites['ui_sprite159'], (big_box_width, big_box_height))
         menu_button_width, menu_button_height = int(big_box_width * 0.7), int(big_box_height * 0.15)
-        self.ui_button = pygame.transform.scale(AssetManager.core_sprites['ui_sprite205'], (menu_button_width, menu_button_height))
-        self.ui_button_active = AssetManager.core_sprites['ui_sprite206'].copy()
-        self.ui_play_button = self.ui_button.copy()
-        self.ui_load_button = self.ui_button.copy()
-        self.ui_options_button = self.ui_button.copy()
-        self.ui_quit_button = self.ui_button.copy()
+        self.big_box_x = (canvas_w - big_box_width) // 2
+        self.big_box_y = int(canvas_h * 0.15)
+        # Button config
+        self.ui_button_sprite = pygame.transform.scale(AssetManager.core_sprites['ui_sprite205'], (menu_button_width, menu_button_height))
+        self.ui_button_sprite_active = pygame.transform.scale(AssetManager.core_sprites['ui_sprite206'], (menu_button_width, menu_button_height))
+        button_x = self.big_box_x + (big_box_width - self.ui_button_sprite.get_width()) // 2
+        total_button_height = self.ui_button_sprite.get_height() * 4
+        spacing = (self.ui_big_box.get_height() - total_button_height) // 5
+        button_y = self.big_box_y + spacing
+        # Buttons
+        self.button_play = Button(pos=(button_x, button_y),callback=self.on_play_clicked, image=self.ui_button_sprite)
+        self.button_load = Button(pos=(button_x, button_y + (menu_button_height + spacing)*1), callback=self.on_load_clicked, image=self.ui_button_sprite)
+        self.button_options = Button(pos=(button_x, button_y + (menu_button_height + spacing)*2), callback=self.on_options_clicked, image=self.ui_button_sprite)
+        self.button_quit = Button(pos=(button_x, button_y + (menu_button_height + spacing)*3), callback=self.on_quit_clicked, image=self.ui_button_sprite)
+        self.buttons = [self.button_play, self.button_load, self.button_options, self.button_quit]
         # Background
         self.bg0 = AssetManager.core_sprites['bg0']
         self.bg1 = AssetManager.core_sprites['bg1']
@@ -34,8 +45,15 @@ class TitleState(State):
         pygame.mixer.music.play(-1) # Loop
 
     def update(self, delta_time: float, actions: dict) -> None:
+        # Update background
         self.scroll_bg(delta_time)
+        # Reset controller actions
         self.game.controller.reset_actions()
+        # Update buttons
+        mouse_pos = self.game.get_mouse_position()
+        mouse_pressed = pygame.mouse.get_pressed()[0] # Left click
+        for button in self.buttons:
+            button.update(mouse_pos, mouse_pressed)
     
     def render(self, surface: pygame.Surface) -> None:
         self.draw_bg(surface)
@@ -69,22 +87,20 @@ class TitleState(State):
         
     def draw_ui(self, surface: pygame.Surface):
         # Big box
-        big_box_x = (surface.get_width() - self.ui_big_box.get_width()) // 2
-        big_box_y = int(surface.get_height() * 0.15)
-        surface.blit(self.ui_big_box, (big_box_x, big_box_y))
+        surface.blit(self.ui_big_box, (self.big_box_x, self.big_box_y))
         # Buttons
-        button_x = big_box_x + (self.ui_big_box.get_width() - self.ui_button.get_width()) // 2
-        total_button_height = self.ui_button.get_height() * 4
-        spacing = (self.ui_big_box.get_height() - total_button_height) // 5
-        button_y = big_box_y + spacing
-        surface.blit(self.ui_play_button, (button_x, button_y))
-        Text.draw_text(surface, "Play", (27, 34, 54), button_x + self.ui_button.get_width()//2, button_y + self.ui_button.get_height()//2 - 6)
-        button_y += self.ui_button.get_height() + spacing
-        surface.blit(self.ui_load_button, (button_x, button_y))
-        Text.draw_text(surface, "Load", (27, 34, 54), button_x + self.ui_button.get_width()//2, button_y + self.ui_button.get_height()//2 - 6)
-        button_y += self.ui_button.get_height() + spacing
-        surface.blit(self.ui_options_button, (button_x, button_y))
-        Text.draw_text(surface, "Options", (27, 34, 54), button_x + self.ui_button.get_width()//2, button_y + self.ui_button.get_height()//2 - 6)
-        button_y += self.ui_button.get_height() + spacing
-        surface.blit(self.ui_quit_button, (button_x, button_y))
-        Text.draw_text(surface, "Quit", (27, 34, 54), button_x + self.ui_button.get_width()//2, button_y + self.ui_button.get_height()//2 - 6)
+        for button in self.buttons:
+            button.draw(surface)
+        
+    def on_play_clicked(self):
+        print("Play button clicked, Implement game start logic here.")
+        
+    def on_load_clicked(self):
+        print("Load button clicked, Implement load game logic here.")
+        
+    def on_options_clicked(self):
+        print("Options button clicked, Implement options menu logic here.")
+    
+    def on_quit_clicked(self):
+        self.game.playing = False
+        self.game.running = False
