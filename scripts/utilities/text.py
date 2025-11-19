@@ -32,7 +32,7 @@ class Text:
             x (int): The x coordinate of the center of the text.
             y (int): The y coordinate of the center of the text.
         """
-        text_surface = AssetManager.core_fonts['title'].render(text, True, (175,175,175))
+        text_surface = AssetManager.core_fonts['title'].render(text, True, (27, 34, 54))
         text_rect = text_surface.get_rect()
         text_rect.center = (x,y)
         surface.blit(text_surface, text_rect)
