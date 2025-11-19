@@ -49,7 +49,7 @@ class AssetManager:
         # Audio
         pygame.mixer.init()
         # Storing paths for music, music is loaded per screen/state
-        AssetManager.core_sounds['evening mood'] = os.path.join(AssetManager.sounds_dir, 'evening mood.ogg')
+        AssetManager.core_sounds['evening mood'] = os.path.join(AssetManager.sounds_dir, 'music/evening mood.ogg')
     
     @staticmethod
     def load_level_assets(level_name: str) -> None:
