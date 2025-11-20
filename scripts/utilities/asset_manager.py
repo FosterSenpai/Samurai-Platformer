@@ -21,6 +21,8 @@ class AssetManager:
     player_sounds: dict[str, pygame.mixer.Sound] = {}
     
     # Level specific assets to be loaded and unloaded per level
+    level_enemies_animations: dict[str, dict[str, pygame.Surface]] = {} # enemy -> dict of animations, animation name -> frames
+    level_enemies_sounds: dict[str, dict[str, pygame.mixer.Sound]] = {} # enemy -> dict of sounds, sound name -> sound
     level_sprites = {}
     level_sounds = {}
     level_fonts = {}
@@ -49,7 +51,7 @@ class AssetManager:
         ui_sprites = ui_sheet.parse_spritesheet()
         for name, sprite in ui_sprites.items():
             AssetManager.core_sprites[f'ui_{name}'] = sprite
-        # Menu Backgrounds (using stringstar fields bg for now)
+        # Menu Backgrounds
         AssetManager.core_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '0.png'))
         AssetManager.core_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '1.png'))
         AssetManager.core_sprites['bg2'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '2.png'))
@@ -121,23 +123,13 @@ class AssetManager:
                 AssetManager.core_music[track_name] = os.path.join(AssetManager.music_dir, file)
         
     @staticmethod
-    def load_level_assets(level_name: str) -> None:
-        """Load level specific assets.
-        Args:
-            level_name (str): The name of the level to load the assets for.
-        """
-        match(level_name):
-            case 'starstring_fields':
-                AssetManager.level_sprites['bg0'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '0.png'))
-                AssetManager.level_sprites['bg1'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '1.png'))
-                AssetManager.level_sprites['bg2'] = pygame.image.load(os.path.join(AssetManager.stringstar_fields_sprites_dir, 'background', '2.png'))
-        
-    @staticmethod
     def unload_level_assets() -> None:
         """Unload any level specific assets."""
         AssetManager.level_fonts.clear()
         AssetManager.level_sounds.clear()
         AssetManager.level_sprites.clear()
+        AssetManager.level_enemies_animations.clear()
+        AssetManager.level_enemies_sounds.clear()
         
     @staticmethod
     def unload_core_assets() -> None:
@@ -154,6 +146,43 @@ class AssetManager:
         AssetManager.player_animations.clear()
         AssetManager.player_sounds.clear()
         
+    # PER LEVEL LOADING/UNLOADING
+    @staticmethod
+    def load_level_assets(level_name: str) -> None:
+        """Load level specific assets.
+        Args:
+            level_name (str): The name of the level to load the assets for.
+        """
+        # Make sure to unload any existing level assets first
+        AssetManager.unload_level_assets()
+        # Call level specific loading functions
+        match(level_name):
+            case 'test_level':
+                AssetManager.load_test_level_assets()
+            case 'level_1':
+                AssetManager.load_level_1_assets()
+            case 'level_2':
+                AssetManager.load_level_2_assets()
+            case _:
+                print(f"No asset loading function defined for level: {level_name}")
+                
+    @staticmethod
+    def load_test_level_assets() -> None:
+        """Load test level assets."""
+        pass
+    
+    @staticmethod
+    def load_level_1_assets() -> None:
+        """Load level 1 assets."""
+        pass
+    
+    @staticmethod
+    def load_level_2_assets() -> None:
+        """Load level 2 assets."""
+        pass
+    
+    
+                
     # MUSIC CONTROLS
     @staticmethod
     def play_music(track_name: str, volume: float = 0.5, loops: int = -1) -> None:
