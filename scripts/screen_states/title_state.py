@@ -90,8 +90,8 @@ class TitleState(State):
         surface.blit(self.bg2, (self.bg2_x + self.bg2.get_width(), 0))
         
     def draw_ui(self, surface: pygame.Surface):
-        # Big box
-        surface.blit(self.ui_big_box, (self.big_box_x, self.big_box_y))
+        # Big box (looks better without)
+        # surface.blit(self.ui_big_box, (self.big_box_x, self.big_box_y))
         # Buttons
         for button in self.buttons:
             button.draw(surface)
