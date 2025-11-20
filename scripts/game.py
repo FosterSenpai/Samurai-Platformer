@@ -54,8 +54,8 @@ class Game():
             
     def load_states(self):
         # Load title screen first
-        self.title_screen = TitleState(self)
-        self.screen_state_stack.append(self.title_screen)
+        title_state = TitleState(self)
+        title_state.enter_state()
     
     def get_mouse_position(self) -> tuple[int, int]:
         mouse_x, mouse_y = pygame.mouse.get_pos()
