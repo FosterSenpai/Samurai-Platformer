@@ -93,7 +93,7 @@ class Player(pygame.sprite.Sprite):
                     self.change_state('attack 1')
                     actions['quick_attack'] = False
         # Special Attack
-        elif actions.get('special_attack'):
+        if actions.get('special_attack') and self.state not in ['attack 1', 'attack 2', 'attack 3']:
             self.change_state('special attack')
             actions['special_attack'] = False
         
