@@ -4,6 +4,7 @@
 # Created: 23-10-2025
 import pygame
 from scripts.screen_states.screen_state import State
+from scripts.screen_states.game_state import GameState
 from scripts.utilities.text import Text
 from scripts.utilities.asset_manager import AssetManager
 from scripts.components.ui_components.button import Button
@@ -51,8 +52,6 @@ class TitleState(State):
     def update(self, delta_time: float, actions: dict) -> None:
         # Update background
         self.scroll_bg(delta_time)
-        # Reset controller actions
-        self.game.controller.reset_actions()
         # Update buttons
         mouse_pos = self.game.get_mouse_position()
         mouse_pressed = pygame.mouse.get_pressed()[0] # Left click
@@ -97,7 +96,10 @@ class TitleState(State):
             button.draw(surface)
         
     def on_play_clicked(self):
-        print("Play button clicked, Implement game start logic here.")
+        # Creatiing and switching to GameState
+        game_state = GameState(self.game)
+        game_state.enter_state()
+        
         
     def on_load_clicked(self):
         print("Load button clicked, Implement load game logic here.")
