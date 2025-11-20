@@ -5,6 +5,7 @@ from scripts.utilities.spritesheet import Spritesheet
 
 class AssetManager:
     # Core assets to always be loaded
+    player_animations = {}
     core_sprites = {}
     core_sounds = {}
     core_fonts = {}
@@ -53,6 +54,9 @@ class AssetManager:
         AssetManager.core_sounds['notification'] = pygame.mixer.Sound(os.path.join(AssetManager.sounds_dir, 'ui', 'notification.ogg'))
         # Storing paths for music, music is loaded per screen/state
         AssetManager.core_sounds['evening mood'] = os.path.join(AssetManager.sounds_dir, 'music/evening mood.ogg')
+        
+        # Load player animations
+        AssetManager.load_player_sprites()
     
     @staticmethod
     def load_level_assets(level_name: str) -> None:
@@ -73,3 +77,22 @@ class AssetManager:
         AssetManager.level_fonts.clear()
         AssetManager.level_sounds.clear()
         AssetManager.level_sprites.clear()
+        
+    @staticmethod
+    def load_player_sprites() -> None:
+        """Load all player sprites."""
+        player_animations: dict[str, list[pygame.Surface]] = {} # Animation name - frames list
+        anim_dir = os.path.join(AssetManager.sprites_dir, 'entities', 'player')
+        idle_sheet = Spritesheet(os.path.join(anim_dir, 'IDLE.png'), frame_count=10, frame_size=(96,96))
+        walk_sheet = Spritesheet(os.path.join(anim_dir, 'WALK.png'), frame_count=12, frame_size=(96,96))
+        attack_1_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 1.png'), frame_count=7, frame_size=(96,96))
+        jump_sheet = Spritesheet(os.path.join(anim_dir, 'JUMP.png'), frame_count=3, frame_size=(96,96))
+        dash_sheet = Spritesheet(os.path.join(anim_dir, 'DASH.png'), frame_count=8, frame_size=(96,96))
+        
+        AssetManager.player_animations['idle'] = idle_sheet.parse_frames()
+        AssetManager.player_animations['walk'] = walk_sheet.parse_frames()
+        AssetManager.player_animations['attack_1'] = attack_1_sheet.parse_frames()
+        AssetManager.player_animations['jump'] = jump_sheet.parse_frames()
+        AssetManager.player_animations['dash'] = dash_sheet.parse_frames()
+        
+        
