@@ -57,9 +57,14 @@ python main.py
 - Assets are loaded centrally through [`AssetManager`](scripts/utilities/asset_manager.py)  
 
 ## TODO List
-
+### In Progress
 - [ ] **Load & Options States**
   - [ ] Draw over title state as popups.
+
+- [ ] **Player Character Sounds**
+
+### Future Ideas
+- Definitely need a controllable music player.
   
 ---
 **Author:** Foster Rae  
