@@ -3,16 +3,22 @@ import os
 from scripts.config import Config
 from scripts.utilities.spritesheet import Spritesheet
 from typing import Optional
+from pydub import AudioSegment
+from pydub.playback import play
+import io
 
 class AssetManager:
     # Core assets to always be loaded
-    player_animations: dict[str, list[pygame.Surface]] = {}
     # TODO: lock the rest of these  vars
     core_sprites = {}
     core_sounds = {}
     core_music: dict[str, str] = {} # track name - file path
     current_track: Optional[str] = None
     core_fonts = {}
+    
+    # Player assets
+    player_animations: dict[str, list[pygame.Surface]] = {}
+    player_sounds: dict[str, pygame.mixer.Sound] = {}
     
     # Level specific assets to be loaded and unloaded per level
     level_sprites = {}
@@ -60,8 +66,10 @@ class AssetManager:
         # Music
         AssetManager.load_all_music_paths()
         
-        # Load player animations
+        # Load player assets
         AssetManager.load_player_sprites()
+        AssetManager.load_player_sounds()
+        
         
     @staticmethod
     def load_player_sprites() -> None:
@@ -72,6 +80,7 @@ class AssetManager:
         attack_1_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 1.png'), frame_count=7, frame_size=(96,96))
         attack_2_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 2.png'), frame_count=7, frame_size=(96,96))
         attack_3_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 3.png'), frame_count=6, frame_size=(96,96))
+        air_attack_sheet = Spritesheet(os.path.join(anim_dir, 'AIR ATTACK.png'), frame_count=6, frame_size=(96,96))
         special_attack_sheet = Spritesheet(os.path.join(anim_dir, 'SPECIAL ATTACK.png'), frame_count=14, frame_size=(96,96))
         jump_start_sheet = Spritesheet(os.path.join(anim_dir, 'JUMP-START.png'), frame_count=3, frame_size=(96,96))
         jump_transition_sheet = Spritesheet(os.path.join(anim_dir, 'JUMP-TRANSITION.png'), frame_count=4, frame_size=(96,96))
@@ -83,11 +92,25 @@ class AssetManager:
         AssetManager.player_animations['attack 1'] = attack_1_sheet.parse_frames()
         AssetManager.player_animations['attack 2'] = attack_2_sheet.parse_frames()
         AssetManager.player_animations['attack 3'] = attack_3_sheet.parse_frames()
+        AssetManager.player_animations['air attack'] = air_attack_sheet.parse_frames()
         AssetManager.player_animations['special attack'] = special_attack_sheet.parse_frames()
         AssetManager.player_animations['jump start'] = jump_start_sheet.parse_frames()
         AssetManager.player_animations['jump transition'] = jump_transition_sheet.parse_frames()
         AssetManager.player_animations['jump fall'] = jump_fall_sheet.parse_frames()
         AssetManager.player_animations['dash'] = dash_sheet.parse_frames()
+        
+    @staticmethod
+    def load_player_sounds() -> None:
+        """Load all player sounds."""
+        sound_dir = os.path.join(AssetManager.sounds_dir, 'fx', 'player')
+        AssetManager.player_sounds['attack 1'] = pygame.mixer.Sound(os.path.join(sound_dir, 'attack 1.wav'))
+        AssetManager.player_sounds['attack 2'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 2)
+        AssetManager.player_sounds['attack 3'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 4)
+        AssetManager.player_sounds['air attack'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 10)
+        AssetManager.player_sounds['sword hit'] = pygame.mixer.Sound(os.path.join(sound_dir, 'sword hit.wav'))
+        AssetManager.player_sounds['special attack'] = pygame.mixer.Sound(os.path.join(sound_dir, 'special attack.wav'))
+        AssetManager.player_sounds['jump start'] = pygame.mixer.Sound(os.path.join(sound_dir, 'jump start.mp3'))
+        
         
     @staticmethod
     def load_all_music_paths() -> None:
@@ -125,6 +148,12 @@ class AssetManager:
         AssetManager.core_music.clear()
         AssetManager.player_animations.clear()
         
+    @staticmethod
+    def unload_player_assets() -> None:
+        """Unload player assets."""
+        AssetManager.player_animations.clear()
+        AssetManager.player_sounds.clear()
+        
     # MUSIC CONTROLS
     @staticmethod
     def play_music(track_name: str, volume: float = 0.5, loops: int = -1) -> None:
@@ -156,3 +185,19 @@ class AssetManager:
         """Stop current music immediately."""
         pygame.mixer.music.stop()
         AssetManager.current_track = None
+        
+    @staticmethod
+    def pitch_shift_sound(sound_path: str, semitones: float) -> pygame.mixer.Sound:
+        sound = AudioSegment.from_file(sound_path)
+        
+        # Change pitch
+        new_sample_rate = int(sound.frame_rate * (2.0 ** (semitones / 12.0)))
+        new_sound = sound._spawn(sound.raw_data, overrides={'frame_rate': new_sample_rate})
+        new_sound = new_sound.set_frame_rate(44100)
+        
+        # Export to bytes and load into pygame Sound
+        sound_bytes = io.BytesIO()
+        new_sound.export(sound_bytes, format='wav')
+        sound_bytes.seek(0)
+        
+        return pygame.mixer.Sound(sound_bytes)
