@@ -18,10 +18,11 @@ class GameState(State):
         self.bg1_x: float = 0.0
         self.bg2_x: float = 0.0
         
-        # Load and play music
-        pygame.mixer.music.load(AssetManager.core_sounds['evening mood'])
-        pygame.mixer.music.set_volume(0.5)
-        pygame.mixer.music.play(-1) # Loop
+    def on_enter(self):
+        AssetManager.play_music('Morning Walk', volume=0.5)
+        
+    def on_resume(self):
+        AssetManager.play_music('Morning Walk', volume=0.5)
         
     def update(self, delta_time: float, actions: dict) -> None:
         # Update game logic
@@ -29,10 +30,17 @@ class GameState(State):
         
         # just leaving back to title for now
         if actions.get('escape'):
-            self.game.screen_state_stack.pop()  # Return to previous state (title)
+            self.exit_state()
     
     def render(self, surface: pygame.Surface) -> None:
         self.draw_bg(surface)
+        
+        # Loop through player idle anim
+        self.player_idle_frames = AssetManager.player_animations['idle']
+        current_time = pygame.time.get_ticks()
+        frame_index = (current_time // 100) % len(self.player_idle_frames)  # Change frame every 100ms
+        player_frame = self.player_idle_frames[frame_index]
+        surface.blit(player_frame, (self.game.GAME_W // 2 - player_frame.get_width() // 2, self.game.GAME_H // 2 - player_frame.get_height() // 2))
         
     def scroll_bg(self, delta_time: float):
         # Scroll speeds

@@ -44,10 +44,11 @@ class TitleState(State):
         self.bg1_x: float = 0.0
         self.bg2_x: float = 0.0
         
-        # Load and play music
-        pygame.mixer.music.load(AssetManager.core_sounds['evening mood'])
-        pygame.mixer.music.set_volume(0.5)
-        pygame.mixer.music.play(-1) # Loop
+    def on_enter(self):
+        AssetManager.play_music('Evening Mood', volume=0.5)
+        
+    def on_resume(self):
+        AssetManager.play_music('Evening Mood', volume=0.5)
 
     def update(self, delta_time: float, actions: dict) -> None:
         # Update background
