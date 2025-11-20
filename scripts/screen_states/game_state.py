@@ -5,10 +5,14 @@
 import pygame
 from scripts.screen_states.screen_state import State
 from scripts.utilities.asset_manager import AssetManager
+from scripts.entities.player import Player
 class GameState(State):
     def __init__(self, game) -> None:
         super().__init__(game)
         canvas_w, canvas_h = self.game.GAME_W, self.game.GAME_H
+        
+        # Create player
+        self.player = Player(x=canvas_w // 2, y=canvas_h // 2)
         
         # Background
         self.bg0: pygame.Surface = AssetManager.core_sprites['bg0']
@@ -27,6 +31,7 @@ class GameState(State):
     def update(self, delta_time: float, actions: dict) -> None:
         # Update game logic
         self.scroll_bg(delta_time)
+        self.player.update(delta_time, actions)
         
         # just leaving back to title for now
         if actions.get('escape'):
@@ -34,13 +39,7 @@ class GameState(State):
     
     def render(self, surface: pygame.Surface) -> None:
         self.draw_bg(surface)
-        
-        # Loop through player idle anim
-        self.player_idle_frames = AssetManager.player_animations['idle']
-        current_time = pygame.time.get_ticks()
-        frame_index = (current_time // 100) % len(self.player_idle_frames)  # Change frame every 100ms
-        player_frame = self.player_idle_frames[frame_index]
-        surface.blit(player_frame, (self.game.GAME_W // 2 - player_frame.get_width() // 2, self.game.GAME_H // 2 - player_frame.get_height() // 2))
+        self.player.draw(surface)
         
     def scroll_bg(self, delta_time: float):
         # Scroll speeds
