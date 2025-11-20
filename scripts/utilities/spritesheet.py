@@ -31,12 +31,12 @@ class Spritesheet:
         sprite.blit(self.sprite_sheet,(0,0),(x,y,w,h))
         return sprite
         
-    def parse_frames(self) -> dict:
+    def parse_frames(self) -> list[pygame.Surface]:
         """Parses spritesheet into individual frames for animations.
         Returns:
-            dict: Dictionary containing frame index - image pairs.
+            list: List containing frame images.
         """
-        frames = {}
+        frames = []
         if self.frame_count is None or self.frame_size is None:
             raise ValueError("frame_count and frame_size must be provided to load frames.")
         # Extract frames from the spritesheet
@@ -44,7 +44,7 @@ class Spritesheet:
             x = i * self.frame_size[0]
             y = 0 # Assuming single row spritesheet
             frame = self.get_sprite(x, y, self.frame_size[0], self.frame_size[1])
-            frames[f"frame_{i}"] = frame
+            frames.append(frame)
         return frames
     
     def parse_spritesheet(self):
