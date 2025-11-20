@@ -37,7 +37,7 @@ class PlayerController:
             if event.key == Config.PLAYER_RIGHT:
                 self.actions['right'] = True
             if event.key == Config.PLAYER_JUMP:
-                self.actions['up'] = True
+                self.actions['jump'] = True
             if event.key == Config.PLAYER_DASH:
                 self.actions['dash'] = True
             if event.key == pygame.K_ESCAPE:
@@ -49,7 +49,7 @@ class PlayerController:
             if event.key == Config.PLAYER_RIGHT:
                 self.actions['right'] = False
             if event.key == Config.PLAYER_JUMP:
-                self.actions['up'] = False
+                self.actions['jump'] = False
             if event.key == Config.PLAYER_DASH:
                 self.actions['dash'] = False
             if event.key == pygame.K_ESCAPE:
