@@ -38,6 +38,7 @@ class Game():
     def update(self):
         self.dt = self.clock.tick(self.fps) / 1000.0
         self.screen_state_stack[-1].update(self.dt, self.controller.actions)
+        self.controller.reset_actions()
     
     def render(self):
         self.screen_state_stack[-1].render(self.game_canvas)
