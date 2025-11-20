@@ -57,64 +57,9 @@ python main.py
 - Assets are loaded centrally through [`AssetManager`](scripts/utilities/asset_manager.py)  
 
 ## TODO List
-### In Progress
 
-- [ ] **Title Screen Enhancements**
-  - [ ] Interactive menu buttons (hover effects, click handling)
-  - [ ] Button navigation with keyboard
-  - [ ] Animated title text
-  - [ ] Buttons actually work
-
-### High Priority
-
-- [ ] **GUI Button Class** (`scripts/utilities/button.py`)
-  - [ ] Create reusable Button class with hover/click states
-  - [ ] Support for sprite-based buttons
-  - [ ] Mouse and keyboard interaction
-  - [ ] Callback system for button actions
-  - [ ] Integration with [`TitleState`](scripts/screen_states/title_state.py)
-
-- [ ] **Complete Title Screen** ([`TitleState`](scripts/screen_states/title_state.py))
-  - [ ] Wire up Play button → start game
-  - [ ] Wire up Options button → options menu
-  - [ ] Wire up Quit button → exit game
-  - [ ] Add button sound effects
-
-### Medium Priority
-
-- [ ] **Game State**
-  - [ ] Create PlayState/GameState class
-  - [ ] Level loading system
-
-- [ ] **Player Mechanics**
-  - [ ] Player movement (walk, run, jump)
-  - [ ] Player animations
-  - [ ] Collision detection
-  - [ ] Gravity and physics
-
-- [ ] **Level Design**
-  - [ ] Tilemap system
-  - [ ] Level editor or data format
-  - [ ] Collectibles and obstacles
-
-### Low Priority
-
-- [ ] **Options Menu**
-  - [ ] Volume controls
-  - [ ] Key rebinding
-  - [ ] Graphics settings
-
-- [ ] **Save/Load System**
-  - [ ] Save game progress
-  - [ ] Load saved games
-  - [ ] Multiple save slots
-
-- [ ] **Polish**
-  - [ ] Particle effects
-  - [ ] Screen shake
-  - [ ] Additional sound effects
-  - [ ] More music tracks
-
+- [ ] **Load & Options States**
+  - [ ] Draw over title state as popups.
   
 ---
 **Author:** Foster Rae  
