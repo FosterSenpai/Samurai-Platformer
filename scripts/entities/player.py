@@ -16,6 +16,8 @@ class Player(pygame.sprite.Sprite):
         
         # Animation
         self.state: str = 'idle'
+        self.previous_state: str = 'idle'
+        self.is_one_shot_animation: bool = False
         self.frame_index: int = 0
         self.animation_timer: float = 0.0
         self.animation_speed: float = 0.1 # seconds per frame
@@ -73,6 +75,11 @@ class Player(pygame.sprite.Sprite):
             self.is_on_ground = False
     
     def handle_input(self, actions: dict) -> None:
+        # Dont interrupt one-shot animations, except for quick attack
+        if self.is_one_shot_animation and self.state not in ['attack_1', 'attack_2', 'attack_3']:
+            if not actions.get('quick_attack'):
+                return
+            
         # Horizontal movement
         if actions.get('left'):
             self.velocity_x = -self.speed
@@ -108,18 +115,36 @@ class Player(pygame.sprite.Sprite):
                 
     def change_state(self, new_state: str) -> None:
         if new_state != self.state:
+            # Storing previous state to revert back to after one-shot animations
+            if not self.is_one_shot_animation:
+                self.previous_state = self.state
             self.state = new_state
             self.frame_index = 0
             self.animation_timer = 0.0
             self.current_animation_frames = AssetManager.player_animations[self.state]
             self.image = self.current_animation_frames[self.frame_index]
+            # Update one-shot flag
+            if self.state in ['attack_1', 'attack_2', 'attack_3', 'special_attack', 'jump']:
+                self.is_one_shot_animation = True
+            else:
+                self.is_one_shot_animation = False
                 
     def update_animation(self, delta_time: float) -> None:
         # Increment frame index
         self.animation_timer += delta_time
         if self.animation_timer >= self.animation_speed:
             self.animation_timer = 0.0
-            self.frame_index = (self.frame_index + 1) % len(AssetManager.player_animations[self.state])
+            self.frame_index += 1
+            
+        # Check if animation finished
+        if self.frame_index >= len(self.current_animation_frames):
+            if self.is_one_shot_animation:
+                # Revert to previous state
+                self.change_state(self.previous_state)
+                self.frame_index = 0
+            else:
+                # Loop animation
+                self.frame_index = 0
             
         # Update current image
         self.image = self.current_animation_frames[self.frame_index].copy()
