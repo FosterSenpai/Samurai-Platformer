@@ -19,7 +19,7 @@ class Config:
     PLAYER_DOWN = pygame.K_s
     PLAYER_DASH = pygame.K_LSHIFT
     PLAYER_QUICK_ATTACK = pygame.K_j
-    PLAYER_STRONG_ATTACK = pygame.K_k
+    PLAYER_SPECIAL_ATTACK = pygame.K_k
     
     @staticmethod
     def load_settings():

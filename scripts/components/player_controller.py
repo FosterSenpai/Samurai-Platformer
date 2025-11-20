@@ -18,10 +18,12 @@ class PlayerController:
         self.actions = {
             'left': False,
             'right': False,
-            'up': False,
+            'jump': False,
             'down': False,
             'dash': False,
             'escape': False,
+            'quick_attack': False,
+            'special_attack': False,
         }
 
     def handle_input(self, event: pygame.Event) -> None:
@@ -42,6 +44,11 @@ class PlayerController:
                 self.actions['dash'] = True
             if event.key == pygame.K_ESCAPE:
                 self.actions['escape'] = True
+            if event.key == Config.PLAYER_QUICK_ATTACK:
+                self.actions['quick_attack'] = True
+            if event.key == Config.PLAYER_SPECIAL_ATTACK:
+                self.actions['special_attack'] = True
+            
         # Deactivate actions on keyup
         if event.type == pygame.KEYUP:
             if event.key == Config.PLAYER_LEFT:
@@ -54,6 +61,10 @@ class PlayerController:
                 self.actions['dash'] = False
             if event.key == pygame.K_ESCAPE:
                 self.actions['escape'] = False
+            if event.key == Config.PLAYER_QUICK_ATTACK:
+                self.actions['quick_attack'] = False
+            if event.key == Config.PLAYER_SPECIAL_ATTACK:
+                self.actions['special_attack'] = False
                 
     def reset_actions(self) -> None:
         """Reset all action states to False."""

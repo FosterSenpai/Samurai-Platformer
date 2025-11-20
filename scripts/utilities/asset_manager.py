@@ -70,12 +70,18 @@ class AssetManager:
         idle_sheet = Spritesheet(os.path.join(anim_dir, 'IDLE.png'), frame_count=10, frame_size=(96,96))
         walk_sheet = Spritesheet(os.path.join(anim_dir, 'WALK.png'), frame_count=12, frame_size=(96,96))
         attack_1_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 1.png'), frame_count=7, frame_size=(96,96))
+        attack_2_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 2.png'), frame_count=7, frame_size=(96,96))
+        attack_3_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 3.png'), frame_count=6, frame_size=(96,96))
+        special_attack_sheet = Spritesheet(os.path.join(anim_dir, 'SPECIAL ATTACK.png'), frame_count=14, frame_size=(96,96))
         jump_sheet = Spritesheet(os.path.join(anim_dir, 'JUMP.png'), frame_count=3, frame_size=(96,96))
         dash_sheet = Spritesheet(os.path.join(anim_dir, 'DASH.png'), frame_count=8, frame_size=(96,96))
         
         AssetManager.player_animations['idle'] = idle_sheet.parse_frames()
         AssetManager.player_animations['walk'] = walk_sheet.parse_frames()
         AssetManager.player_animations['attack_1'] = attack_1_sheet.parse_frames()
+        AssetManager.player_animations['attack_2'] = attack_2_sheet.parse_frames()
+        AssetManager.player_animations['attack_3'] = attack_3_sheet.parse_frames()
+        AssetManager.player_animations['special_attack'] = special_attack_sheet.parse_frames()
         AssetManager.player_animations['jump'] = jump_sheet.parse_frames()
         AssetManager.player_animations['dash'] = dash_sheet.parse_frames()
         
