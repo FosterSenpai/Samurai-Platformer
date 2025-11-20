@@ -2,7 +2,6 @@
 # Title screen state for the game.
 # Author: Foster Rae
 # Created: 23-10-2025
-# Last Modified: 23-10-2025
 import pygame
 from scripts.screen_states.screen_state import State
 from scripts.utilities.text import Text
@@ -13,31 +12,36 @@ class TitleState(State):
     def __init__(self, game) -> None:
         super().__init__(game)
         canvas_w, canvas_h = self.game.GAME_W, self.game.GAME_H
+        
         # UI elements
         # Container config
-        big_box_width, big_box_height = int(canvas_w * 0.35), int(canvas_h * 0.8)
-        self.ui_big_box = pygame.transform.scale(AssetManager.core_sprites['ui_sprite159'], (big_box_width, big_box_height))
-        menu_button_width, menu_button_height = int(big_box_width * 0.7), int(big_box_height * 0.15)
-        self.big_box_x = (canvas_w - big_box_width) // 2
-        self.big_box_y = int(canvas_h * 0.15)
+        big_box_width: int = int(canvas_w * 0.35)
+        big_box_height: int = int(canvas_h * 0.8)
+        self.ui_big_box: pygame.Surface = pygame.transform.scale(AssetManager.core_sprites['ui_sprite159'], (big_box_width, big_box_height))
+        self.big_box_x: int = int((canvas_w - big_box_width) // 2)
+        self.big_box_y: int = int(canvas_h * 0.15)
         # Button config
-        self.ui_button_sprite = pygame.transform.scale(AssetManager.core_sprites['ui_sprite205'], (menu_button_width, menu_button_height))
-        self.ui_button_sprite_active = pygame.transform.scale(AssetManager.core_sprites['ui_sprite206'], (menu_button_width, menu_button_height))
+        menu_button_width = int(big_box_width * 0.7)
+        menu_button_height = int(big_box_height * 0.15)
+        self.ui_button_sprite: pygame.Surface = pygame.transform.scale(AssetManager.core_sprites['ui_sprite205'], (menu_button_width, menu_button_height))
+        self.ui_button_sprite_active: pygame.Surface = pygame.transform.scale(AssetManager.core_sprites['ui_sprite206'], (menu_button_width, menu_button_height))
         button_x = self.big_box_x + (big_box_width - self.ui_button_sprite.get_width()) // 2
         total_button_height = self.ui_button_sprite.get_height() * 4
         spacing = (self.ui_big_box.get_height() - total_button_height) // 5
         button_y = self.big_box_y + spacing
         # Buttons
-        self.button_play = Button(pos=(button_x, button_y), display_text="Play", callback=self.on_play_clicked,image=self.ui_button_sprite)
-        self.button_load = Button(pos=(button_x, button_y + (menu_button_height + spacing)*1), display_text="Load", callback=self.on_load_clicked, image=self.ui_button_sprite)
-        self.button_options = Button(pos=(button_x, button_y + (menu_button_height + spacing)*2), display_text="Options", callback=self.on_options_clicked, image=self.ui_button_sprite)
-        self.button_quit = Button(pos=(button_x, button_y + (menu_button_height + spacing)*3), display_text="Quit", callback=self.on_quit_clicked, image=self.ui_button_sprite)
-        self.buttons = [self.button_play, self.button_load, self.button_options, self.button_quit]
+        self.button_play: Button = Button(pos=(button_x, button_y), display_text="Play", callback=self.on_play_clicked,image=self.ui_button_sprite)
+        self.button_load: Button = Button(pos=(button_x, button_y + (menu_button_height + spacing)*1), display_text="Load", callback=self.on_load_clicked, image=self.ui_button_sprite)
+        self.button_options: Button = Button(pos=(button_x, button_y + (menu_button_height + spacing)*2), display_text="Options", callback=self.on_options_clicked, image=self.ui_button_sprite)
+        self.button_quit: Button = Button(pos=(button_x, button_y + (menu_button_height + spacing)*3), display_text="Quit", callback=self.on_quit_clicked, image=self.ui_button_sprite)
+        self.buttons: list[Button] = [self.button_play, self.button_load, self.button_options, self.button_quit]
         # Background
-        self.bg0 = AssetManager.core_sprites['bg0']
-        self.bg1 = AssetManager.core_sprites['bg1']
-        self.bg2 = AssetManager.core_sprites['bg2']
-        self.bg0_x, self.bg1_x, self.bg2_x = 0, 0, 0 # Bg x positions for scrolling
+        self.bg0: pygame.Surface = AssetManager.core_sprites['bg0']
+        self.bg1: pygame.Surface = AssetManager.core_sprites['bg1']
+        self.bg2: pygame.Surface = AssetManager.core_sprites['bg2']
+        self.bg0_x: float = 0.0 # Bg x positions for scrolling
+        self.bg1_x: float = 0.0
+        self.bg2_x: float = 0.0
         
         # Load and play music
         pygame.mixer.music.load(AssetManager.core_sounds['evening mood'])
