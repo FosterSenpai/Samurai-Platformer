@@ -24,6 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_timer: float = 0.0
         self.animation_speed: float = 0.05 # seconds per frame
         self.facing_right: bool = True
+        self.attacks = ['attack 1', 'attack 2', 'attack 3', 'special attack', 'air attack']
         
         # Frames
         self.current_animation_frames: list[pygame.Surface] = AssetManager.player_animations[self.state]
@@ -69,58 +70,49 @@ class Player(pygame.sprite.Sprite):
         # Apply dampening to horizontal movement
         self.velocity_x *= 0.9
         
-        self.check_ground_collision()
-        
-        # Update position
-        self.rect.center = (int(self.x), int(self.y))
-        
-        self.update_jump(delta_time)
-        
-        
+        self.check_ground_collision()                 # Ground collision check
+        self.rect.center = (int(self.x), int(self.y)) # Update rect position
+        self.update_jump(delta_time)                  # Update jump state machine
+
         # Update animation
         self.update_animation(delta_time)
-        
-        # TEMP: fake ground at y=200
-        if self.y >= 200:
-            self.y = 200
-            self.velocity_y = 0.0
-            self.is_on_ground = True
-        else:
-            self.is_on_ground = False
     
     def handle_input(self, actions: dict) -> None:
         # Attacks
         if actions.get('quick_attack'):
-            # queue next attack if pressed during quick attack
-            if self.state in ['attack 1', 'attack 2']: # chaining attacks
-                self.attack_buffer = 'next_attack' # just a flag
-                actions['quick_attack'] = False # need to reset to avoid triggers
-            elif self.state != 'attack 3': # first attack
-                self.change_state('attack 1')
+            # Air attack
+            if not self.is_on_ground and self.state not in self.attacks:
+                self.change_state('air attack')
                 actions['quick_attack'] = False
+            if self.is_on_ground:
+                # Quick Attack, queue next attack if pressed during quick attack
+                if self.state in ['attack 1', 'attack 2']: # chaining attacks
+                    self.attack_buffer = 'next_attack' # just a flag
+                    actions['quick_attack'] = False # need to reset to avoid triggers
+                elif self.state not in ['attack 3', 'air attack']: # first attack
+                    self.change_state('attack 1')
+                    actions['quick_attack'] = False
+        # Special Attack
         elif actions.get('special_attack'):
             self.change_state('special attack')
             actions['special_attack'] = False
-            
-        # Dont interrupt one-shot animations
-        if self.is_one_shot_animation:
-            return
-            
+        
         # Horizontal movement
-        if actions.get('left'):
-            self.velocity_x = -self.speed
+        movement_speed = self.speed if self.is_on_ground else self.speed * self.air_control
+        if actions.get('left') and self.state not in self.attacks:
+            self.velocity_x = -movement_speed
             self.facing_right = False
-            if self.is_on_ground:
+            if self.is_on_ground and not self.is_one_shot_animation:
                 self.change_state('walk')
-        elif actions.get('right'):
-            self.velocity_x = self.speed
+        elif actions.get('right') and self.state not in self.attacks:
+            self.velocity_x = movement_speed
             self.facing_right = True
-            if self.is_on_ground:
+            if self.is_on_ground and not self.is_one_shot_animation:
                 self.change_state('walk')
         else:
-            if self.is_on_ground and self.state == 'walk':
+            if self.is_on_ground and self.state == 'walk' and not self.is_one_shot_animation:
                 self.change_state('idle')
-            
+        
         # Jumping
         if actions.get('jump') and self.is_on_ground:
             self.velocity_y = -self.jump_strength
@@ -140,7 +132,7 @@ class Player(pygame.sprite.Sprite):
                     self.change_state('jump fall')
         else:
             # Landed
-            if self.state in ['jump start', 'jump transition', 'jump fall']:
+            if self.state in ['jump start', 'jump transition', 'jump fall', 'air attack', 'special attack']:
                 if abs(self.velocity_x) > 10:
                     self.change_state('walk')
                 else:
@@ -151,13 +143,15 @@ class Player(pygame.sprite.Sprite):
         # TEMP, setting on ground if y >= 200
         if self.y >= 200:
             self.is_on_ground = True
+            self.y = 200
+            self.velocity_y = 0.0
         else:
             self.is_on_ground = False
                 
     def change_state(self, new_state: str) -> None:
         if new_state != self.state:
-            # Storing previous state to revert back to after one-shot animations
-            if not self.is_one_shot_animation:
+            # Storing previous state to revert back to after one-shot animations, not attacks
+            if not self.is_one_shot_animation and self.state not in self.attacks:
                 self.previous_state = self.state
             # Change state and reset animation stuff
             self.state = new_state
@@ -171,7 +165,7 @@ class Player(pygame.sprite.Sprite):
             self.attack_buffer = None
             
             # Update one-shot flag
-            if self.state in ['attack 1', 'attack 2', 'attack 3', 'special attack']: # one-shot animations
+            if self.state in self.attacks: # one-shot animations, only attacks for now
                 self.is_one_shot_animation = True
             elif self.state in ['jump start', 'jump fall']: # hold final frame animations
                 self.is_one_shot_animation = False
@@ -179,6 +173,13 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.is_one_shot_animation = False
                 self.hold_final_frame = False
+                
+            self.play_state_sound()
+                
+    def play_state_sound(self) -> None:
+        # Play sound associated with current state
+        if self.state in AssetManager.player_sounds:
+            AssetManager.player_sounds[self.state].play()
                 
     def update_animation(self, delta_time: float) -> None:
         # Hold final frame animations
