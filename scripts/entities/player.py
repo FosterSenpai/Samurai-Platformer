@@ -132,7 +132,7 @@ class Player(pygame.sprite.Sprite):
                     self.change_state('jump fall')
         else:
             # Landed
-            if self.state in ['jump start', 'jump transition', 'jump fall', 'air attack', 'special attack']:
+            if self.state in ['jump start', 'jump transition', 'jump fall', 'air attack'] and not self.is_one_shot_animation:
                 if abs(self.velocity_x) > 10:
                     self.change_state('walk')
                 else:
@@ -198,18 +198,24 @@ class Player(pygame.sprite.Sprite):
                     if self.frame_index >= combo_window_frame:
                         self.can_combo = True
                 
-            # Check if animation finished
-            if self.frame_index >= len(self.current_animation_frames):
+            # One shot animation handling
+            if self.frame_index >= len(self.current_animation_frames): # On final frame
                 if self.is_one_shot_animation:
+                    # Quick attack combo handling
                     if self.attack_buffer == 'next_attack':
                         # Chain to next attack
                         if self.state == 'attack 1':
                             self.change_state('attack 2')
                         elif self.state == 'attack 2':
                             self.change_state('attack 3')
-                    else:
-                        # Revert to previous state
-                        self.change_state(self.previous_state)
+                    else: # No buffered attack, normal one shot ending
+                        if self.is_on_ground:
+                            if abs(self.velocity_x) > 10:
+                                self.change_state('walk')
+                            else:
+                                self.change_state('idle')
+                        else:
+                            self.change_state(self.previous_state)
                         self.frame_index = 0
                 else:
                     # Loop animation
