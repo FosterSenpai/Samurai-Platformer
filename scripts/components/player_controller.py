@@ -20,7 +20,8 @@ class PlayerController:
             'right': False,
             'up': False,
             'down': False,
-            'dash': False
+            'dash': False,
+            'escape': False,
         }
 
     def handle_input(self, event: pygame.Event) -> None:
@@ -39,6 +40,8 @@ class PlayerController:
                 self.actions['up'] = True
             if event.key == Config.PLAYER_DASH:
                 self.actions['dash'] = True
+            if event.key == pygame.K_ESCAPE:
+                self.actions['escape'] = True
         # Deactivate actions on keyup
         if event.type == pygame.KEYUP:
             if event.key == Config.PLAYER_LEFT:
@@ -49,6 +52,8 @@ class PlayerController:
                 self.actions['up'] = False
             if event.key == Config.PLAYER_DASH:
                 self.actions['dash'] = False
+            if event.key == pygame.K_ESCAPE:
+                self.actions['escape'] = False
                 
     def reset_actions(self) -> None:
         """Reset all action states to False."""
