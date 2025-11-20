@@ -59,12 +59,16 @@ python main.py
 
 ## TODO List
 ### In Progress
-- [ ] **Combos**
-  - [ ] load all 3 normal attacks and cycle through them, reset if too much time passed
 - [ ] **Load & Options States**
   - [ ] Draw over title state as popups.
 
-- [ ] **Player Character Sounds**
+- [ ] **Enemy samurai class**
+  - [ ] need enemy class
+  - [ ] Decide how per level loading is going to work, load all enemies per level in own func?
+  - [ ] Add sounds, maybe same as player just pydub the pitch
+
+- [ ] **Large Level Asset Cache**
+  - [ ] to speed up transitions back to a level just left, implement a small cache to store large assets to try avoid loading again.
 
 ### Future Ideas
 - Definitely need a controllable music player.
