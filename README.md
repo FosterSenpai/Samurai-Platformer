@@ -42,10 +42,11 @@ Samurai-Platformer/
 - **Pygame** - Game engine and rendering
 
 ## Getting Started
-Pygame is currently the only dependency, when more are added i'll make a 'requirements.txt' to install.
+When more are added i'll make a 'requirements.txt' to install.
 ```bash
 # Install dependencies
 pip install pygame
+pip install pydub
 
 # Run the game
 python main.py
@@ -58,6 +59,8 @@ python main.py
 
 ## TODO List
 ### In Progress
+- [ ] **Combos**
+  - [ ] load all 3 normal attacks and cycle through them, reset if too much time passed
 - [ ] **Load & Options States**
   - [ ] Draw over title state as popups.
 
