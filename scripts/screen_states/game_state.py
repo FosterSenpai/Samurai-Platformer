@@ -6,6 +6,7 @@ import pygame
 from scripts.screen_states.screen_state import State
 from scripts.utilities.asset_manager import AssetManager
 from scripts.entities.player import Player
+from scripts.utilities.text import Text
 class GameState(State):
     def __init__(self, game) -> None:
         super().__init__(game)
@@ -40,6 +41,8 @@ class GameState(State):
     def render(self, surface: pygame.Surface) -> None:
         self.draw_bg(surface)
         self.player.draw(surface)
+        # TEMP DRAW FLOOR
+        self.draw_floor(surface)
         
     def scroll_bg(self, delta_time: float):
         # Scroll speeds
@@ -65,3 +68,16 @@ class GameState(State):
         surface.blit(self.bg1, (self.bg1_x + self.bg1.get_width(), 0))
         surface.blit(self.bg2, (self.bg2_x, 0))
         surface.blit(self.bg2, (self.bg2_x + self.bg2.get_width(), 0))
+        
+    # TEMP DRAWING FLOOR
+    def draw_floor(self, surface: pygame.Surface):
+        floor_y = 233
+        floor_box = AssetManager.core_sprites['ui_sprite159']
+        # stretch to full width
+        floor_box = pygame.transform.scale(floor_box, (surface.get_width(), floor_box.get_height()))
+        surface.blit(floor_box, (0, floor_y))
+        
+        # Draw big 'testing' text
+        Text.draw_title(surface, "TESTING GROUNDS", surface.get_width() // 2, surface.get_height() // 8 * 6)
+        
+        
