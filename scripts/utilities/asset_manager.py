@@ -3,6 +3,9 @@ import os
 from scripts.config import Config
 from scripts.utilities.spritesheet import Spritesheet
 from typing import Optional
+# Suppress pydub warning, its doing what it needs to do fine
+import warnings
+warnings.filterwarnings("ignore", message="Couldn't find ffmpeg or avconv", category=RuntimeWarning, module="pydub.utils")
 from pydub import AudioSegment
 from pydub.playback import play
 import io
