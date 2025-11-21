@@ -114,7 +114,7 @@ class AssetManager:
         AssetManager.player_sounds['air attack'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 10)
         AssetManager.player_sounds['sword hit'] = pygame.mixer.Sound(os.path.join(sound_dir, 'sword hit.wav'))
         AssetManager.player_sounds['special attack'] = pygame.mixer.Sound(os.path.join(sound_dir, 'special attack.wav'))
-        AssetManager.player_sounds['jump start'] = pygame.mixer.Sound(os.path.join(sound_dir, 'jump start.mp3'))
+        AssetManager.player_sounds['jump start'] = pygame.mixer.Sound(os.path.join(sound_dir, 'jump start.wav'))
         
         
     @staticmethod
