@@ -31,16 +31,16 @@ class AssetManager:
     level_fonts = {}
     
     # Pointers to directories
-    data_dir = os.path.join('data')
-    assets_dir = os.path.join(data_dir, 'assets')
-    fonts_dir = os.path.join(assets_dir, 'fonts')
-    sounds_dir = os.path.join(assets_dir, 'sounds')
-    music_dir = os.path.join(sounds_dir, 'music')
-    sprites_dir = os.path.join(assets_dir, 'sprites')
-    ui_sprites_dir = os.path.join(sprites_dir, 'ui')
-    environment_sprites_dir = os.path.join(sprites_dir, 'environment')
-    biome_sprites_dir = os.path.join(environment_sprites_dir, 'biomes')
-    stringstar_fields_sprites_dir = os.path.join(biome_sprites_dir, 'stringstar_fields')
+    data_dir: str = os.path.join('data')
+    assets_dir: str = os.path.join(data_dir, 'assets')
+    fonts_dir: str = os.path.join(assets_dir, 'fonts')
+    sounds_dir: str = os.path.join(assets_dir, 'sounds')
+    music_dir: str = os.path.join(sounds_dir, 'music')
+    sprites_dir: str = os.path.join(assets_dir, 'sprites')
+    ui_sprites_dir: str = os.path.join(sprites_dir, 'ui')
+    environment_sprites_dir: str = os.path.join(sprites_dir, 'environment')
+    biome_sprites_dir: str = os.path.join(environment_sprites_dir, 'biomes')
+    stringstar_fields_sprites_dir: str = os.path.join(biome_sprites_dir, 'stringstar_fields')
     
     @staticmethod
     def load_core_assets() -> None:
@@ -71,52 +71,17 @@ class AssetManager:
         # Music
         AssetManager.load_all_music_paths()
         
-        # Load player assets
-        AssetManager.load_player_sprites()
-        AssetManager.load_player_sounds()
-        
+        AssetManager.load_player_assets()
         
     @staticmethod
-    def load_player_sprites() -> None:
-        """Load all player sprites."""
-        anim_dir = os.path.join(AssetManager.sprites_dir, 'entities', 'player')
-        idle_sheet = Spritesheet(os.path.join(anim_dir, 'IDLE.png'), frame_count=10, frame_size=(96,96))
-        walk_sheet = Spritesheet(os.path.join(anim_dir, 'WALK.png'), frame_count=12, frame_size=(96,96))
-        attack_1_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 1.png'), frame_count=7, frame_size=(96,96))
-        attack_2_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 2.png'), frame_count=7, frame_size=(96,96))
-        attack_3_sheet = Spritesheet(os.path.join(anim_dir, 'ATTACK 3.png'), frame_count=6, frame_size=(96,96))
-        air_attack_sheet = Spritesheet(os.path.join(anim_dir, 'AIR ATTACK.png'), frame_count=6, frame_size=(96,96))
-        special_attack_sheet = Spritesheet(os.path.join(anim_dir, 'SPECIAL ATTACK.png'), frame_count=14, frame_size=(96,96))
-        jump_start_sheet = Spritesheet(os.path.join(anim_dir, 'JUMP-START.png'), frame_count=3, frame_size=(96,96))
-        jump_transition_sheet = Spritesheet(os.path.join(anim_dir, 'JUMP-TRANSITION.png'), frame_count=4, frame_size=(96,96))
-        jump_fall_sheet = Spritesheet(os.path.join(anim_dir, 'JUMP-FALL.png'), frame_count=2, frame_size=(96,96))
-        dash_sheet = Spritesheet(os.path.join(anim_dir, 'DASH.png'), frame_count=8, frame_size=(96,96))
-        
-        AssetManager.player_animations['idle'] = idle_sheet.parse_frames()
-        AssetManager.player_animations['walk'] = walk_sheet.parse_frames()
-        AssetManager.player_animations['attack 1'] = attack_1_sheet.parse_frames()
-        AssetManager.player_animations['attack 2'] = attack_2_sheet.parse_frames()
-        AssetManager.player_animations['attack 3'] = attack_3_sheet.parse_frames()
-        AssetManager.player_animations['air attack'] = air_attack_sheet.parse_frames()
-        AssetManager.player_animations['special attack'] = special_attack_sheet.parse_frames()
-        AssetManager.player_animations['jump start'] = jump_start_sheet.parse_frames()
-        AssetManager.player_animations['jump transition'] = jump_transition_sheet.parse_frames()
-        AssetManager.player_animations['jump fall'] = jump_fall_sheet.parse_frames()
-        AssetManager.player_animations['dash'] = dash_sheet.parse_frames()
-        
-    @staticmethod
-    def load_player_sounds() -> None:
-        """Load all player sounds."""
-        sound_dir = os.path.join(AssetManager.sounds_dir, 'fx', 'player')
-        AssetManager.player_sounds['attack 1'] = pygame.mixer.Sound(os.path.join(sound_dir, 'attack 1.wav'))
+    def load_player_assets() -> None:
+        """Load all player assets."""
+        AssetManager.load_animations_folder(os.path.join(AssetManager.sprites_dir, 'entities', 'player'), AssetManager.player_animations)
+        AssetManager.load_sounds_folder(os.path.join(AssetManager.sounds_dir, 'fx', 'player'), AssetManager.player_sounds)
+        sound_dir: str = os.path.join(AssetManager.sounds_dir, 'fx', 'player')
         AssetManager.player_sounds['attack 2'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 2)
         AssetManager.player_sounds['attack 3'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 4)
-        AssetManager.player_sounds['air attack'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 10)
-        AssetManager.player_sounds['sword hit'] = pygame.mixer.Sound(os.path.join(sound_dir, 'sword hit.wav'))
-        AssetManager.player_sounds['special attack'] = pygame.mixer.Sound(os.path.join(sound_dir, 'special attack.wav'))
-        AssetManager.player_sounds['jump start'] = pygame.mixer.Sound(os.path.join(sound_dir, 'jump start.wav'))
-        
-        
+    
     @staticmethod
     def load_all_music_paths() -> None:
         """Load all music paths into core_sounds dict."""
@@ -183,8 +148,6 @@ class AssetManager:
     def load_level_2_assets() -> None:
         """Load level 2 assets."""
         pass
-    
-    
                 
     # MUSIC CONTROLS
     @staticmethod
@@ -233,3 +196,41 @@ class AssetManager:
         sound_bytes.seek(0)
         
         return pygame.mixer.Sound(sound_bytes)
+    
+    # HELPERS
+    @staticmethod
+    def load_animations_folder(folder_path: str, save_dict: dict[str, list[pygame.Surface]]) -> None:
+        """Load all animations in a folder into the provided dictionary.
+        Args:
+            folder_path (str): Path to the folder containing animation subfolders.
+            save_dict (dict): Dictionary to save animations into.
+        """
+        for animation in os.listdir(folder_path):
+            # Path and name
+            anim_path = os.path.join(folder_path, animation)
+            type = animation.split('.')[-1] 
+            name = animation.lower().replace(f".{type}", '')
+            
+            # Getting num frames and size from image height, assuming
+            # all frames are square and sheet is one row.
+            anim_image = pygame.image.load(anim_path).convert_alpha()
+            image_w, image_h = anim_image.get_size()
+            frame_count = image_w // image_h
+            frame_size = (image_h, image_h)
+            
+            # Create spritesheet and parse frames
+            anim_sheet = Spritesheet(anim_path, frame_count=frame_count, frame_size=frame_size)
+            save_dict[name] = anim_sheet.parse_frames()
+            
+    @staticmethod       
+    def load_sounds_folder(folder_path: str, save_dict: dict[str, pygame.mixer.Sound]) -> None:
+        """Load all sounds in a folder into the provided dictionary.
+        Args:
+            folder_path (str): Path to the folder containing sound files.
+            save_dict (dict): Dictionary to save sounds into.
+        """
+        for sound in os.listdir(folder_path):
+            sound_path = os.path.join(folder_path, sound)
+            type = sound.split('.')[-1]
+            name = sound.lower().replace(f".{type}", '')
+            save_dict[name] = pygame.mixer.Sound(sound_path)
