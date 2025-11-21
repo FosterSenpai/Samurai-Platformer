@@ -102,7 +102,7 @@ class Player(pygame.sprite.Sprite):
             if not self.is_on_ground and self.state not in self.attacks:
                 self.change_state('air attack')
                 actions['quick_attack'] = False
-            if self.is_on_ground:
+            if self.is_on_ground and self.state not in ['special attack']:
                 # Quick Attack, queue next attack if pressed during quick attack
                 if self.state in ['attack 1', 'attack 2']: # chaining attacks
                     self.attack_buffer = 'next_attack' # just a flag
@@ -139,6 +139,12 @@ class Player(pygame.sprite.Sprite):
                     self.change_state('walk')
                 else:
                     self.change_state('idle')
+                    
+    def update_attacking_flag(self) -> None:
+        # idk thinking of setting a flag when an attack is happening, then i could check for mask based collisions and if attacking apply damage,
+        # maybe need to mask only sword or like sword arc area, not whole player hitbox or it would be scuffed,
+        # need to think about how to segment sword or arc from rest of player sprite
+        pass
     
     def check_ground_collision(self) -> None:
         # Should maybe check if bottom pixels overlap any environment tiles in a sprite group or something
