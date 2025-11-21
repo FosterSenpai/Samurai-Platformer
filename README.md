@@ -59,7 +59,7 @@ python main.py
 
 ## TODO List
 ### In Progress
-- [ ] **Load & Options States**
+2- [ ] **Load & Options States**
   - [ ] Draw over title state as popups.
 
 - [ ] **Enemy samurai class**
@@ -69,6 +69,12 @@ python main.py
 
 - [ ] **Large Level Asset Cache**
   - [ ] to speed up transitions back to a level just left, implement a small cache to store large assets to try avoid loading again.
+
+- [ ] **Level Loading**
+  - [ ] Move test scenario into a loadable level.
+
+- [ ] **Testing UI**
+  - [ ] Add UI for button inputs, change ui based on what current input device is, xbox kbm, ps etc. Maybe a dict mapping the config input to the incon and drawing the icon based on input device, there will be a clean way to do it.
 
 ### Future Ideas
 - Definitely need a controllable music player.
