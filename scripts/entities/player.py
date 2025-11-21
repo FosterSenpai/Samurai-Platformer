@@ -78,6 +78,24 @@ class Player(pygame.sprite.Sprite):
         self.update_animation(delta_time)
     
     def handle_input(self, actions: dict) -> None:
+        # Horizontal movement
+        movement_speed = self.speed if self.is_on_ground else self.speed * self.air_control
+        can_move_horizontally = self.state not in self.attacks or not self.is_on_ground
+        
+        if actions.get('left') and can_move_horizontally:
+            self.velocity_x = -movement_speed
+            self.facing_right = False
+            if self.is_on_ground and not self.is_one_shot_animation:
+                self.change_state('walk')
+        elif actions.get('right') and can_move_horizontally:
+            self.velocity_x = movement_speed
+            self.facing_right = True
+            if self.is_on_ground and not self.is_one_shot_animation:
+                self.change_state('walk')
+        else:
+            if self.is_on_ground and self.state == 'walk' and not self.is_one_shot_animation:
+                self.change_state('idle')
+                
         # Attacks
         if actions.get('quick_attack'):
             # Air attack
@@ -96,22 +114,6 @@ class Player(pygame.sprite.Sprite):
         if actions.get('special_attack') and self.state not in ['attack 1', 'attack 2', 'attack 3']:
             self.change_state('special attack')
             actions['special_attack'] = False
-        
-        # Horizontal movement
-        movement_speed = self.speed if self.is_on_ground else self.speed * self.air_control
-        if actions.get('left') and self.state not in self.attacks:
-            self.velocity_x = -movement_speed
-            self.facing_right = False
-            if self.is_on_ground and not self.is_one_shot_animation:
-                self.change_state('walk')
-        elif actions.get('right') and self.state not in self.attacks:
-            self.velocity_x = movement_speed
-            self.facing_right = True
-            if self.is_on_ground and not self.is_one_shot_animation:
-                self.change_state('walk')
-        else:
-            if self.is_on_ground and self.state == 'walk' and not self.is_one_shot_animation:
-                self.change_state('idle')
         
         # Jumping
         if actions.get('jump') and self.is_on_ground:
@@ -132,7 +134,7 @@ class Player(pygame.sprite.Sprite):
                     self.change_state('jump fall')
         else:
             # Landed
-            if self.state in ['jump start', 'jump transition', 'jump fall', 'air attack'] and not self.is_one_shot_animation:
+            if self.state in ['jump start', 'jump transition', 'jump fall', 'air attack', 'special attack'] and self.frame_index >= len(self.current_animation_frames) - 1:
                 if abs(self.velocity_x) > 10:
                     self.change_state('walk')
                 else:
