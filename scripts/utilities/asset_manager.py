@@ -81,6 +81,7 @@ class AssetManager:
         sound_dir: str = os.path.join(AssetManager.sounds_dir, 'fx', 'player')
         AssetManager.player_sounds['attack 2'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 2)
         AssetManager.player_sounds['attack 3'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 4)
+        AssetManager.player_sounds['air attack'] = AssetManager.pitch_shift_sound(os.path.join(sound_dir, 'attack 1.wav'), 8)
     
     @staticmethod
     def load_all_music_paths() -> None:

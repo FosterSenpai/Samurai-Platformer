@@ -25,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_speed: float = 0.05 # seconds per frame
         self.facing_right: bool = True
         self.attacks = ['attack 1', 'attack 2', 'attack 3', 'special attack', 'air attack']
+        self.one_shot_animations = self.attacks + ['dash']
         
         # Frames
         self.current_animation_frames: list[pygame.Surface] = AssetManager.player_animations[self.state]
@@ -32,13 +33,19 @@ class Player(pygame.sprite.Sprite):
         self.rect: pygame.Rect = self.image.get_rect(center=(self.x, self.y))
         
         # Player Physics
-        self.velocity_y: float = 0.0
-        self.velocity_x: float = 0.0
         self.pixels_per_meter: float = 96.0
-        self.gravity: float = 9.8 * self.pixels_per_meter # 9.8 m/s²
+        
         self.speed: float = 1.0 * self.pixels_per_meter # 1 m/s
+        self.max_speed: float = 3.0 * self.pixels_per_meter # 3 m/s
+        self.dash_boost_multiplier: float = 3.5
+        self.max_dash_speed: float = 8.0 * self.pixels_per_meter # 8 m/s
         self.air_control: float = 0.7 # 70% control in air
         self.jump_height_meters: float = 0.7
+        self.dash_distance_meters: float = 3.0
+        
+        self.velocity_y: float = 0.0
+        self.velocity_x: float = 0.0
+        self.gravity: float = 9.8 * self.pixels_per_meter # 9.8 m/s²
         self.jump_strength: float = (2.0 * self.gravity * self.jump_height_meters* self.pixels_per_meter) ** 0.5 # v = sqrt(2gh)
         
         self.is_on_ground: bool = False
@@ -78,17 +85,25 @@ class Player(pygame.sprite.Sprite):
         self.update_animation(delta_time)
     
     def handle_input(self, actions: dict) -> None:
+        # Dashing
+        if actions.get('dash') and self.state not in self.attacks: # No dashing during attacks
+            # Apply dash velocity
+            dash_distance = self.dash_distance_meters * self.pixels_per_meter
+            self.velocity_x += dash_distance if self.facing_right else -dash_distance
+            self.change_state('dash')
+            actions['dash'] = False
+        
         # Horizontal movement
         movement_speed = self.speed if self.is_on_ground else self.speed * self.air_control
         can_move_horizontally = self.state not in self.attacks or not self.is_on_ground
         
         if actions.get('left') and can_move_horizontally:
-            self.velocity_x = -movement_speed
+            self.velocity_x += -movement_speed
             self.facing_right = False
             if self.is_on_ground and not self.is_one_shot_animation:
                 self.change_state('walk')
         elif actions.get('right') and can_move_horizontally:
-            self.velocity_x = movement_speed
+            self.velocity_x += movement_speed
             self.facing_right = True
             if self.is_on_ground and not self.is_one_shot_animation:
                 self.change_state('walk')
@@ -132,9 +147,13 @@ class Player(pygame.sprite.Sprite):
                 # Change to 'fall' if at final frame
                 if self.frame_index >= len(self.current_animation_frames) - 1:
                     self.change_state('jump fall')
+            else: # In air
+                # If falling and at final frame of current animation force 'jump fall'
+                if self.velocity_y > 0 and self.state != 'jump fall' and self.frame_index >= len(self.current_animation_frames) - 1:
+                    self.change_state('jump fall')
         else:
             # Landed
-            if self.state in ['jump start', 'jump transition', 'jump fall', 'air attack', 'special attack'] and self.frame_index >= len(self.current_animation_frames) - 1:
+            if self.state in ['jump start', 'jump transition', 'jump fall', 'air attack', 'special attack', 'dash'] and self.frame_index >= len(self.current_animation_frames) - 1:
                 if abs(self.velocity_x) > 10:
                     self.change_state('walk')
                 else:
@@ -173,8 +192,9 @@ class Player(pygame.sprite.Sprite):
             self.attack_buffer = None
             
             # Update one-shot flag
-            if self.state in self.attacks: # one-shot animations, only attacks for now
+            if self.state in self.one_shot_animations:
                 self.is_one_shot_animation = True
+                self.hold_final_frame = False
             elif self.state in ['jump start', 'jump fall']: # hold final frame animations
                 self.is_one_shot_animation = False
                 self.hold_final_frame = True
